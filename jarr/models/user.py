@@ -1,12 +1,11 @@
 import re
 from datetime import timedelta
 
-from sqlalchemy import Boolean, Column, Integer, String, PickleType
-from sqlalchemy.orm import relationship, validates
-
-from jarr.lib.utils import utc_now
 from jarr.bootstrap import Base, conf
+from jarr.lib.utils import utc_now
 from jarr.models.utc_datetime_type import UTCDateTime
+from sqlalchemy import Boolean, Column, Integer, PickleType, String
+from sqlalchemy.orm import relationship, validates
 
 
 class User(Base):
@@ -54,6 +53,13 @@ class User(Base):
     clusters = relationship('Cluster', back_populates='user',
                             cascade='all, delete-orphan',
                             foreign_keys='[Cluster.user_id]')
+    link_by_article_ids = relationship('LinkByArticleId',
+                                       back_populates='user',
+                                       cascade='all, delete-orphan',
+                                       foreign_keys='[LinkByArticleId.user_id]')
+    links = relationship('Link', back_populates='user',
+                         cascade='all, delete-orphan',
+                         foreign_keys='[Link.user_id]')
 
     @property
     def effectivly_active(self):

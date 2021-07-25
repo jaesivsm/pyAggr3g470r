@@ -59,6 +59,10 @@ class AbstractArticleBuilder:
         raise NotImplementedError()
 
     @staticmethod
+    def extract_links(entry):
+        raise NotImplementedError()
+
+    @staticmethod
     def extract_content(entry):
         raise NotImplementedError()
 
@@ -94,6 +98,7 @@ class AbstractArticleBuilder:
             if self.article.get('content'):
                 self.article['content'] = clean_urls(self.article['content'],
                                                      self.article['link'])
+        self.article['links'] = self.extract_links(entry)
 
     @classmethod
     def _head(cls, url, reraise=False):
@@ -116,19 +121,16 @@ class AbstractArticleBuilder:
             logger.error("couldn't fetch %r", url)
 
     @staticmethod
-    def _feed_content_type(content_type, article):
+    def _content_type(content_type):
         content_type = str(content_type or '')
         if content_type.startswith('image/'):
-            article['article_type'] = ArticleType.image
+            return ArticleType.image
         elif content_type.startswith('video/'):
-            article['article_type'] = ArticleType.video
+            return ArticleType.video
         elif content_type.startswith('audio/'):
-            article['article_type'] = ArticleType.audio
+            return ArticleType.audio
         elif is_embedded_link(article['link']):
-            article['article_type'] = ArticleType.embedded
-
-    def _all_articles(self):
-        yield self.article
+            return ArticleType.embedded
 
     def enhance(self):
         if is_embedded_link(self.article['link']):
@@ -138,12 +140,10 @@ class AbstractArticleBuilder:
                 self.article['link_hash'] = self.to_hash(video_id)
             except IndexError:
                 pass
-            yield from self._all_articles()
-            return
+            return self.article
         head = self._head(self.article['link'])
         if not head:
-            yield from self._all_articles()
-            return
+            return self.article
 
         if self.article['link'] != head.url:
             self.article['link'] = head.url  # fix link in case of redirect
@@ -153,11 +153,13 @@ class AbstractArticleBuilder:
                 clean_head = self._head(clean_link)
                 if clean_head:
                     self.article['link_hash'] = self.to_hash(clean_head.url)
-        self._feed_content_type(head.headers.get('Content-Type'), self.article)
+        self.article['article_type'] = self._content_type(
+            head.headers.get('Content-Type'))
 
         if not self.article.get('lang') \
                 and head.headers.get('Content-Language'):
             # correcting lang from http headers
             lang = head.headers['Content-Language'].split(',')[0]
             self.article['lang'] = lang
-        yield from self._all_articles()
+        return self.article
+

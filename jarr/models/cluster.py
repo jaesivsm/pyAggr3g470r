@@ -36,29 +36,27 @@ class Cluster(Base):
 
     # relationships
     user = relationship('User', back_populates='clusters')
-    main_article = relationship('Article', uselist=False,
-                                foreign_keys=main_article_id)
-    articles = relationship('Article', back_populates='cluster',
-            foreign_keys=[Article.cluster_id],
-            order_by=Article.date.asc())
-    feeds = relationship('Feed', back_populates='clusters',
-            secondary='article',
-            foreign_keys=[Article.feed_id, Article.cluster_id])
-    categories = relationship('Category', back_populates='clusters',
-            secondary='article',
-            foreign_keys=[Article.cluster_id, Article.category_id])
+    main_article = relationship(
+        'Article', uselist=False, foreign_keys=main_article_id)
+    articles = relationship(
+        'Article', back_populates='cluster',
+        foreign_keys=[Article.cluster_id], order_by=Article.date.asc())
+    feeds = relationship(
+        'Feed', back_populates='clusters', secondary='article',
+        foreign_keys=[Article.feed_id, Article.cluster_id])
+    categories = relationship(
+        'Category', back_populates='clusters', secondary='article',
+        foreign_keys=[Article.cluster_id, Article.category_id])
 
     __table_args__ = (
-            ForeignKeyConstraint([user_id], ['user.id'], ondelete='CASCADE'),
-            Index('ix_cluster_uid_date',
-                  user_id, main_date.desc().nullslast()),
-            Index('ix_cluster_liked_uid', liked, user_id),
-            Index('ix_cluster_read_uid', read, user_id),
-            # used by cluster deletion in FeedController.delete
-            Index('ix_cluster_uid_martid',
-                  user_id, main_article_id.nullsfirst()),
-            # triggered by article.ondelete
-            Index('ix_cluster_martid', main_article_id.nullslast()),
+        ForeignKeyConstraint([user_id], ['user.id'], ondelete='CASCADE'),
+        Index('ix_cluster_uid_date', user_id, main_date.desc().nullslast()),
+        Index('ix_cluster_liked_uid', liked, user_id),
+        Index('ix_cluster_read_uid', read, user_id),
+        # used by cluster deletion in FeedController.delete
+        Index('ix_cluster_uid_martid', user_id, main_article_id.nullsfirst()),
+        # triggered by article.ondelete
+        Index('ix_cluster_martid', main_article_id.nullslast()),
     )
 
     @property

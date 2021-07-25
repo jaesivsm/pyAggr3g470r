@@ -7,6 +7,7 @@ from functools import cached_property
 from jarr.bootstrap import Base
 from jarr.lib.enums import ArticleType, ClusterReason
 from jarr.lib.utils import utc_now
+from jarr.models.link import LinkByArticleId
 from jarr.models.utc_datetime_type import UTCDateTime
 from jarr.lib.clustering_af.vector import TFIDFVector, get_simple_vector
 
@@ -25,7 +26,6 @@ class Article(Base):
     lang = Column(String)
     date = Column(UTCDateTime, default=utc_now)
     retrieved_date = Column(UTCDateTime, default=utc_now)
-    order_in_cluster = Column(Integer)
 
     # integration control
     article_type = Column(Enum(ArticleType),
@@ -54,6 +54,11 @@ class Article(Base):
                             foreign_keys=[category_id])
     feed = relationship('Feed', back_populates='articles',
                         foreign_keys=[feed_id])
+    links = relationship('Link', back_populates='articles',
+                         secondary='link_by_article_id',
+                         foreign_keys=[LinkByArticleId.user_id,
+                                       LinkByArticleId.article_id,
+                                       LinkByArticleId.link_hash])
 
     __table_args__ = (
             ForeignKeyConstraint([user_id], ['user.id'], ondelete='CASCADE'),
