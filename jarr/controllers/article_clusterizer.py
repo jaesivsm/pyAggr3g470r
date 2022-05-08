@@ -128,6 +128,7 @@ class Clusterizer:
             filters['feed_id__ne'] = article.feed_id
 
         feed_join = [Feed.id == Article.feed_id,
+                     Feed.user_id == self.user_id or article.user_id,
                      or_(Feed.cluster_enabled.__eq__(True),
                          Feed.cluster_enabled.__eq__(None))]
         if filter_tfidf:

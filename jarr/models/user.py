@@ -1,11 +1,10 @@
 import re
-from datetime import timedelta
 
-from sqlalchemy import Boolean, Column, Integer, String, PickleType
-from sqlalchemy.orm import relationship, validates, RelationshipProperty
+from sqlalchemy import Boolean, Column, Index, Integer, PickleType, String
+from sqlalchemy.orm import RelationshipProperty, relationship, validates
 
-from jarr.lib.utils import utc_now
 from jarr.bootstrap import Base, conf
+from jarr.lib.utils import utc_now
 from jarr.models.utc_datetime_type import UTCDateTime
 
 
@@ -54,6 +53,10 @@ class User(Base):  # type: ignore
     clusters: RelationshipProperty = relationship(
         'Cluster', back_populates='user', cascade='all, delete-orphan',
         foreign_keys='[Cluster.user_id]')
+
+    __table_args__ = (
+            Index('ix_user_isactive_lastconn', is_active, last_connection),
+    )
 
     @validates('login')
     @staticmethod
