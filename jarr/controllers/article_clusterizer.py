@@ -3,8 +3,6 @@ from collections import defaultdict
 from datetime import timedelta
 from functools import partial
 
-from sqlalchemy import and_, or_
-
 from jarr.bootstrap import conf, session
 from jarr.controllers import ArticleController
 from jarr.lib.clustering_af.grouper import get_best_match_and_score
@@ -13,6 +11,7 @@ from jarr.metrics import ARTICLE_CREATION, TFIDF_SCORE, WORKER_BATCH
 from jarr.models import Article, Cluster, Feed
 from jarr.signals import event
 from jarr.utils import get_tfidf_pref
+from sqlalchemy import and_, or_
 
 logger = logging.getLogger(__name__)
 NO_CLUSTER_TYPE = {ArticleType.image, ArticleType.video, ArticleType.embedded}
@@ -80,8 +79,8 @@ class Clusterizer:
                 yield candidate
 
     def _get_cluster_by_link(self, article):
-        for candidate in self._get_query_for_clustering(article,
-                {'link_hash': article.link_hash}):
+        for candidate in self._get_query_for_clustering(
+                article, {'link_hash': article.link_hash}):
             article.cluster_reason = ClusterReason.link
             cluster_event(context='link', result='match', level=logging.INFO)
             return candidate.cluster
@@ -128,7 +127,7 @@ class Clusterizer:
             filters['feed_id__ne'] = article.feed_id
 
         feed_join = [Feed.id == Article.feed_id,
-                     Feed.user_id == self.user_id or article.user_id,
+                     Feed.user_id == (self.user_id or article.user_id),
                      or_(Feed.cluster_enabled.__eq__(True),
                          Feed.cluster_enabled.__eq__(None))]
         if filter_tfidf:
@@ -136,7 +135,7 @@ class Clusterizer:
                                  Feed.cluster_tfidf_enabled.__eq__(None)))
 
         query = ArticleController(article.user_id).read(**filters)\
-                .join(Feed, and_(*feed_join))
+            .join(Feed, and_(*feed_join))
 
         # operations involving categories are complicated, handling in software
         for candidate in query:
