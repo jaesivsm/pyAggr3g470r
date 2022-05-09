@@ -48,7 +48,10 @@ requests = "==2.*"
 SQLAlchemy = "==1.4.*"
 the-conf = "==0.*"
 flask-cors = "==3.*"
-jsonschema = "==4.4.0"
+jsonschema = "==4.4.0"  # fix on webserv compat
+itsdangerous = "==2.1.0"  # fix on webserv compat
+jinja2 = "==3.0.3"  # fix on webserv compat
+werkzeug = "==2.0.3"  # fix on webserv compat
 
 [requires]
 python_version = "3.9"
