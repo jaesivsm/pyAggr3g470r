@@ -37,10 +37,12 @@ class FeedController(AbstractController):
         return ArticleController(self.user_id)
 
     def _set_unread_count(self, filters: set, fctr: int):
+        filters.add(Cluster.user_id == Article.user_id)
+        if self.user_id:
+            filters.add(Cluster.user_id == self.user_id)
+            filters.add(Article.user_id == self.user_id)
         q = session.query(Article.feed_id, func.count(Article.id))\
-            .join(Cluster, and_(Cluster.user_id == self.user_id,
-                                Cluster.id == Article.cluster_id,
-                                Article.user_id == self.user_id, *filters))\
+            .join(Cluster, and_(Cluster.id == Article.cluster_id, *filters))\
             .group_by(Article.feed_id)
         counts = defaultdict(list)
         for fid, cnt in q:
@@ -50,9 +52,11 @@ class FeedController(AbstractController):
                         {Feed.unread_count: Feed.unread_count + (cnt * fctr)})
 
     def decrease_unread_count(self, filters: set):
+        filters.add(Cluster.read.__eq__(False))
         self._set_unread_count(filters, -1)
 
     def increase_unread_count(self, filters: set):
+        filters.add(Cluster.read.__eq__(True))
         self._set_unread_count(filters, 1)
 
     def list_w_categ(self):

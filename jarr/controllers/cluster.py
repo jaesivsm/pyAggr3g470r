@@ -53,11 +53,9 @@ class ClusterController(AbstractController):
         if 'read' in attrs:
             fctrl = FeedController(self.user_id)
             if attrs['read']:
-                fctrl.decrease_unread_count(self._to_filters(
-                    **{'read': False, **filters}))
+                fctrl.decrease_unread_count(self._to_filters(**filters))
             else:
-                fctrl.increase_unread_count(self._to_filters(
-                    **{'read': True, **filters}))
+                fctrl.increase_unread_count(self._to_filters(**filters))
         return super().update(filters, attrs, return_objs, commit)
 
     # UI methods
@@ -159,7 +157,7 @@ class ClusterController(AbstractController):
     def delete(self, obj_id, delete_articles=True):
         # handling unread count
         fctrl = FeedController(self.user_id)
-        fctrl.decrease_unread_count(self._to_filters(id=obj_id, read=False))
+        fctrl.decrease_unread_count(self._to_filters(**{'id': obj_id})
 
         self.update({'id': obj_id}, {'main_article_id': None}, commit=False)
         actrl = ArticleController(self.user_id)

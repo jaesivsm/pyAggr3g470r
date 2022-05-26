@@ -54,15 +54,11 @@ class ClusterResource(Resource):
     @cluster_ns.response(226, 'OK, marked as read')
     @cluster_ns.response(400, 'Validation error')
     @cluster_ns.response(401, 'Authorization needed')
-    @cluster_ns.response(403, 'Forbidden')
     @cluster_ns.response(404, 'Not found')
     @jwt_required()
     def get(cluster_id):
-        cctrl = ClusterController()
+        cctrl = ClusterController(cluster_identity.id)
         cluster = cctrl.get(id=cluster_id)
-        if cluster.user_id != current_identity.id:
-            raise Forbidden()
-        cctrl.user_id = current_identity.id
         code = 200
         cluster.content = migrate_content(cluster.content)
         if not cluster.read:
