@@ -46,7 +46,7 @@ def extract_feed_info(headers, text=None):
     feed_info = {'etag': headers.get('etag', ''),
                  'last_modified': headers.get('last-modified', rfc_1123_utc())}
     if text and not feed_info['etag']:
-        feed_info['etag'] = 'jarr/"%s"' % digest(text)
+        feed_info['etag'] = f'jarr/"{digest(text)}"'
 
     _extract_max_age(headers, feed_info)
     if 'expires' not in feed_info:

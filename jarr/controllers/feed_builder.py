@@ -3,15 +3,13 @@ import logging
 import re
 import urllib
 
-from feedparser import FeedParserDict
-from feedparser import parse as fp_parse
-from requests.exceptions import ReadTimeout
-
+import feedparser
 from jarr.lib.const import FEED_MIMETYPES, GOOGLE_BOT_UA, REQUIRED_JSON_FEED
 from jarr.lib.enums import FeedType
 from jarr.lib.html_parsing import (extract_feed_links, extract_icon_url,
                                    extract_opg_prop, extract_title)
 from jarr.lib.utils import jarr_get
+from requests.exceptions import ReadTimeout
 
 SCHEME = r'(?:https?:)?\/\/'
 logger = logging.getLogger(__name__)
@@ -79,10 +77,10 @@ class FeedBuilderController:
                     return False
             elif any(mimetype in self.feed_response_content_type
                      for mimetype in FEED_MIMETYPES):
-                self.parsed_feed = fp_parse(self.feed_response.content)
+                self.parsed_feed = feedparser.parse(self.feed_response.content)
             else:
                 return False
-        if not isinstance(self.parsed_feed, (FeedParserDict, dict)):
+        if not isinstance(self.parsed_feed, (feedparser.FeedParserDict, dict)):
             return False
         return (self.parsed_feed.get('entries')
                 or self.parsed_feed.get('items')
@@ -100,6 +98,8 @@ class FeedBuilderController:
             result['link'] = self.parsed_feed.get('href')
         if fp_feed.get('subtitle'):
             result['description'] = fp_feed.get('subtitle')
+        if (fp_feed.get('image') or {}).get('href'):
+            result['icon_url'] = fp_feed['image']['href']
 
         # extracting extra links
         rel_to_link = {'self': 'link', 'alternate': 'site_link'}

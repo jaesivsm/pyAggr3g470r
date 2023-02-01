@@ -72,9 +72,7 @@ class AbstractCrawler:
             logger.warning('%r: feed moved from %r to %r', self.feed,
                            self.feed.link, response.url)
             info['link'] = response.url
-        if info:
-            FeedController(self.feed.user_id).update({'id': self.feed.id},
-                                                     info)
+        FeedController(self.feed.user_id).update({'id': self.feed.id}, info)
 
     def parse_feed_response(self, response):
         raise NotImplementedError()
