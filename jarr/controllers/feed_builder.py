@@ -91,9 +91,13 @@ class FeedBuilderController:
             return {}
         fp_feed = self.parsed_feed.get('feed') or {}
 
-        result = {'link': self.feed_response.url,
-                  'site_link': fp_feed.get('href') or fp_feed.get('link'),
+        result = {'site_link': fp_feed.get('href') or fp_feed.get('link'),
                   'title': fp_feed.get('title')}
+
+        if self.feed_response:
+            result['link'] = self.feed_response.url
+        elif self.parsed_feed.get('link'):
+            result['link'] = self.parsed_feed['link']
         if self.parsed_feed.get('href'):
             result['link'] = self.parsed_feed.get('href')
         if fp_feed.get('subtitle'):
