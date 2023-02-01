@@ -34,7 +34,7 @@ class CrawlerTest(JarrFlaskCommon):
 
     def setUp(self):
         super().setUp()
-        with open(self.feed_path) as fd:
+        with open(self.feed_path, encoding='utf8') as fd:
             self._content = fd.read()
         self._is_secure_served \
             = patch('jarr.lib.url_cleaners.is_secure_served')
@@ -142,8 +142,8 @@ class CrawlerTest(JarrFlaskCommon):
         crawler()
 
         self.assertEqual(BASE_COUNT, ArticleController().read().count())
-        self._reset_feeds_freshness(etag='jarr/"%s"' % digest(self._content))
-        self.resp_headers = {'etag': 'jarr/"%s"' % digest(self._content)}
+        self._reset_feeds_freshness(etag=f"jarr/\"{digest(self._content)}\"")
+        self.resp_headers = {'etag': f"jarr/\"{digest(self._content)}\""}
 
         crawler()
         self.assertEqual(BASE_COUNT, ArticleController().read().count())
@@ -174,7 +174,7 @@ class CrawlerMethodsTest(unittest.TestCase):
         self.resp = Mock(text='text', headers={}, status_code=304, history=[])
 
     def test_etag_matching_w_constructed_etag(self):
-        self.feed.etag = 'jarr/"%s"' % digest('text')
+        self.feed.etag = f"jarr/\"{digest('text')}\""
         self.assertFalse(response_etag_match(self.feed, self.resp))
         self.assertTrue(response_calculated_etag_match(self.feed, self.resp))
 
