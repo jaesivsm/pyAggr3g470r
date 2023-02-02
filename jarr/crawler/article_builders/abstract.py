@@ -24,7 +24,7 @@ class AbstractArticleBuilder:
 
     @property
     def entry_ids(self):
-        return {k: self.article[k] for k in {'entry_id', 'feed_id', 'user_id'}}
+        return {k: self.article[k] for k in ('entry_id', 'feed_id', 'user_id')}
 
     @property
     def do_skip_creation(self):
