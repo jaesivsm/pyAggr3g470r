@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from enum import Enum
 from hashlib import md5, sha1
 
+import advocate
 import requests
 from jarr.lib.const import GOOGLE_BOT_UA
 from requests.exceptions import SSLError
@@ -14,6 +15,12 @@ logger = logging.getLogger(__name__)
 RFC_1123_FORMAT = "%a, %d %b %Y %X %Z"
 LANG_FORMAT = re.compile("^[a-z]{2}(_[A-Z]{2})?$")
 CORRECTABLE_LANG_FORMAT = re.compile("^[A-z]{2}(.[A-z]{2})?.*$")
+LANG_FORMAT = re.compile(r"^[a-z]{2}(_[A-Z]{2})?$")
+CORRECTABLE_LANG_FORMAT = re.compile(r"^[A-z]{2}(.[A-z]{2})?.*$")
+PRIVATE_IP = re.compile(
+    r"(^127\.)|(^192\.168\.)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|"
+    r"(^172\.3[0-1]\.)|(^::1$)|(^[fF][cCdD])"
+)
 
 
 def utc_now():
@@ -74,27 +81,39 @@ def digest(text, alg="md5", out="str", encoding="utf8"):
     return getattr(method(text), "hexdigest" if out == "str" else "digest")()
 
 
-def jarr_get(url, timeout=None, user_agent=None, headers=None, **kwargs):
-    from jarr.bootstrap import conf  # circular import otherwise
+def jarr_get(
+    url,
+    timeout=None,
+    user_agent=None,
+    headers=None,
+    ssrf_protect=True,
+    **kwargs,
+):
+    from jarr.bootstrap import conf  # prevent circular import
+
+    if ssrf_protect:
+        http_get = advocate.get
+    else:
+        http_get = requests.get
 
     timeout = timeout or conf.crawler.timeout
     user_agent = user_agent or conf.crawler.user_agent
-    def_headers = {"User-Agent": user_agent}
+    constructed_headers = {"User-Agent": user_agent}
     if headers is not None:
-        def_headers.update(headers)
+        constructed_headers.update(headers)
     request_kwargs = {
         "allow_redirects": True,
         "timeout": timeout,
-        "headers": def_headers,
+        "headers": constructed_headers,
     }
     request_kwargs.update(kwargs)
     if "youtube.com" in url:
         cookies = request_kwargs.get("cookies") or {}
         cookies["CONSENT"] = "YES+1"
         request_kwargs["cookies"] = cookies
-        request_kwargs["headers"]["User-Agent"] = GOOGLE_BOT_UA
+        constructed_headers["User-Agent"] = GOOGLE_BOT_UA
     try:
-        return requests.get(url, **request_kwargs)
+        return http_get(url, **request_kwargs)
     except SSLError:
         request_kwargs["verify"] = False
-        return requests.get(url, **request_kwargs)
+        return http_get(url, **request_kwargs)

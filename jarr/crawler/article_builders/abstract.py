@@ -1,14 +1,13 @@
 import logging
 
 import requests
-from requests.exceptions import MissingSchema
-
 from jarr.bootstrap import conf
 from jarr.lib.content_generator import YOUTUBE_RE, is_embedded_link
 from jarr.lib.enums import ArticleType
 from jarr.lib.filter import FiltersAction, process_filters
 from jarr.lib.url_cleaners import clean_urls, remove_utm_tags
 from jarr.lib.utils import clean_lang, digest, utc_now
+from requests.exceptions import MissingSchema
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +23,7 @@ class AbstractArticleBuilder:
 
     @property
     def entry_ids(self):
-        return {k: self.article[k] for k in {'entry_id', 'feed_id', 'user_id'}}
+        return {k: self.article[k] for k in ('entry_id', 'feed_id', 'user_id')}
 
     @property
     def do_skip_creation(self):
