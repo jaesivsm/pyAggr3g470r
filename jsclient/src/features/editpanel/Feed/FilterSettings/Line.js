@@ -3,15 +3,15 @@ import PropTypes from "prop-types";
 import { createSelector } from "reselect";
 import { connect, useDispatch } from "react-redux";
 // material ui components
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton";
-import FormControl from "@material-ui/core/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import FormControl from "@mui/material/FormControl";
 // material icons
-import MinusIcon from "@material-ui/icons/Remove";
-import ArrowUpIcon from "@material-ui/icons/ArrowUpward";
-import ArrowDownIcon from "@material-ui/icons/ArrowDownward";
+import MinusIcon from "@mui/icons-material/Remove";
+import ArrowUpIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownIcon from "@mui/icons-material/ArrowDownward";
 // jarr
 import style from "./style";
 import { moveUpFilter, moveDownFilter, editFilter, removeFilter

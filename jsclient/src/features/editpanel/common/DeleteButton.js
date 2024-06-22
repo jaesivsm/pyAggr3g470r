@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Button from "@material-ui/core/Button";
-import WarningIcon from "@material-ui/icons/Warning";
+import Button from "@mui/material/Button";
+import WarningIcon from "@mui/icons-material/Warning";
 import { closePanel } from "../slice";
 import doListClusters from "../../../hooks/doListClusters";
 import doDeleteObj from "../../../hooks/doDeleteObj";

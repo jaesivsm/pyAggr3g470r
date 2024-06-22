@@ -2,10 +2,13 @@ import { apiUrl } from "../const";
 import { doRetryOnTokenExpiration } from "../authSlice";
 import doFetchFeeds from "./doFetchFeeds";
 
-export default (id, objType): AppThunk => async (dispatch, getState) => {
+const doCreateObj = (type): AppThunk => async (dispatch, getState) => {
   await doRetryOnTokenExpiration({
-    method: "delete",
-    url: `${apiUrl}/${objType}${id ? `/${id}` : ""}`,
+    method: "post",
+    url: `${apiUrl}/${type}`,
+    data: getState().edit.loadedObj,
   }, dispatch, getState);
   dispatch(doFetchFeeds());
 };
+
+export default doCreateObj;

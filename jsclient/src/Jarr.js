@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { ThemeProvider } from "@material-ui/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
 
 import {jarrTheme, jarrLoginTheme} from "./Jarr.theme";
 import useStyles from "./Jarr.styles.js";

@@ -3,13 +3,13 @@ import clsx from "clsx";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 // material ui components
-import { useTheme } from "@material-ui/core/styles";
-import Fab from "@material-ui/core/Fab";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Paper from "@material-ui/core/Paper";
-import AddIcon from "@material-ui/icons/Add";
-import Alert from "@material-ui/lab/Alert";
+import { useTheme } from "@mui/material/styles";
+import Fab from "@mui/material/Fab";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import CircularProgress from "@mui/material/CircularProgress";
+import Paper from "@mui/material/Paper";
+import Alert from "@mui/material/Alert";
+import AddIcon from "@mui/icons-material/Add";
 // jarr
 import Cluster from "./components/Cluster";
 import SelectedObjCard from "./components/SelectedObjCard";

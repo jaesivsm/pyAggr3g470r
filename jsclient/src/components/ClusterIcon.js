@@ -2,8 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import { apiUrl } from "../const";
 import qs from "qs";
-import LinkIcon from "@material-ui/icons/Link";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import LinkIcon from "@mui/icons-material/Link";
+import { Theme, createStyles } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
 
 const iconStyle = makeStyles((theme: Theme) =>
   createStyles({

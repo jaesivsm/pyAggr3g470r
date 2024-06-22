@@ -48,6 +48,7 @@ export const doLogin = (
   password: string
 ): AppThunk => async (dispatch) => {
   dispatch(requestSent());
+
   try {
     var result;
     if (!!token) {
@@ -64,7 +65,7 @@ export const doLogin = (
       );
     }
     dispatch(responseRecieved());
-    dispatch(tokenAcquired(result));
+    dispatch(tokenAcquired(result.data));
   } catch (err) {
     dispatch(purgeCredentials());
     dispatch(authError(err.response));
@@ -134,7 +135,7 @@ export const doValidOAuth = (code): AppThunk => async (dispatch) => {
       data: { code },
     });
     dispatch(responseRecieved());
-    dispatch(tokenAcquired(result));
+    dispatch(tokenAcquired(result.data));
   } catch (err) {
     dispatch(purgeCredentials());
     dispatch(authError(err.response));

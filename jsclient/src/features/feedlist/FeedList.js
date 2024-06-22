@@ -2,29 +2,30 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 // components
-import { useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { FixedSizeList } from "react-window";
-import Drawer from "@material-ui/core/Drawer";
-import InputBase from "@material-ui/core/InputBase";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import Drawer from "@mui/material/Drawer";
+import InputBase from "@mui/material/InputBase";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import CircularProgress from "@mui/material/CircularProgress";
 // icons
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import AddFeedIcon  from "@material-ui/icons/Add";
-import AddCategoryIcon from "@material-ui/icons/LibraryAdd";
-import FoldAllCategoriesIcon from "@material-ui/icons/UnfoldLess";
-import UnFoldAllCategoriesIcon from "@material-ui/icons/UnfoldMore";
-import SearchIcon from "@material-ui/icons/Search";
-import Divider from "@material-ui/core/Divider";
-import Close from "@material-ui/icons/Close";
-import Alert from "@material-ui/lab/Alert";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import AddFeedIcon  from "@mui/icons-material/Add";
+import AddCategoryIcon from "@mui/icons-material/LibraryAdd";
+import FoldAllCategoriesIcon from "@mui/icons-material/UnfoldLess";
+import UnFoldAllCategoriesIcon from "@mui/icons-material/UnfoldMore";
+import SearchIcon from "@mui/icons-material/Search";
+import Divider from "@mui/material/Divider";
+import Close from "@mui/icons-material/Close";
+import Alert from "@mui/material/Alert";
 // jarrs
 import feedListStyle from "./feedListStyle";
 import FeedRow from "./FeedRow";
 import { toggleAllFolding, toggleMenu,
          setSearchFilter,
+         filterFeedRows,
 } from "./slice";
 import { openPanel } from "../editpanel/slice";
 import { feedListWidth } from "../../const";
@@ -32,7 +33,7 @@ import doFetchUnreadCount from "../../hooks/doFetchUnreadCount";
 import doFetchFeeds from "../../hooks/doFetchFeeds";
 
 function mapStateToProps(state) {
-  return { itemCount: state.feeds.feedListRows.filter(state.feeds.feedListFilter).length,
+  return { itemCount: filterFeedRows(state.feeds.feedListRows, state.feeds.searchTerm).length,
            isFoldedFromParent: state.feeds.isParentFolded,
            isFeedListOpen: state.feeds.isOpen,
            isEditPanelOpen: state.edit.isOpen,

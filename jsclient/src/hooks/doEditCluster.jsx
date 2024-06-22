@@ -3,7 +3,7 @@ import { doRetryOnTokenExpiration } from "../authSlice";
 import { apiUrl, pageLength } from "../const";
 import doLoadMoreClusters from "./doLoadMoreClusters";
 
-export default (clusterId, payload): AppThunk => async (dispatch, getState) => {
+const doEditCluster = (clusterId, payload): AppThunk => async (dispatch, getState) => {
   dispatch(updateClusterAttrs({ clusterId, ...payload }));
   if (payload["read_reason"] === null) {
     delete payload["read_reason"];
@@ -19,3 +19,5 @@ export default (clusterId, payload): AppThunk => async (dispatch, getState) => {
     dispatch(doLoadMoreClusters());
   }
 };
+
+export default doEditCluster;

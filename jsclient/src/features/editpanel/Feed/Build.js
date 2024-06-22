@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 // material ui
-import Alert from "@material-ui/lab/Alert";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton";
-import FormControl from "@material-ui/core/FormControl";
-import HelpIcon from "@material-ui/icons/Help";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import FormControl from "@mui/material/FormControl";
+import HelpIcon from "@mui/icons-material/Help";
 // jarr
 import editPanelStyle from "../editPanelStyle";
 import doBuildFeed from "../../../hooks/doBuildFeed";

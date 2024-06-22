@@ -2,15 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 // meterial components
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Typography from "@material-ui/core/Typography";
-import Select from "@material-ui/core/Select";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import Select from "@mui/material/Select";
 
 import editPanelStyle from "../editPanelStyle";
 import { editLoadedObj } from "../slice";
@@ -41,15 +41,15 @@ function ClusterSettings({ level, clusterOptions, edit }) {
   const classes = editPanelStyle();
 
   return (
-    <ExpansionPanel className={classes.editPanelCluster} >
-      <ExpansionPanelSummary
+    <Accordion className={classes.editPanelCluster} >
+      <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
         <Typography className={classes.heading}>Cluster Settings</Typography>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails className={classes.editPanelClusterSettings}>
+      </AccordionSummary>
+      <AccordionDetails className={classes.editPanelClusterSettings}>
         {Object.entries(clusteringConfOptions)
                .map(([opt, label]) => (
           <FormControl key={opt} className={classes.editPanelClusterCtrl}>
@@ -64,8 +64,8 @@ function ClusterSettings({ level, clusterOptions, edit }) {
             </Select>
           </FormControl>
         ))}
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+      </AccordionDetails>
+    </Accordion>
   );
 }
 

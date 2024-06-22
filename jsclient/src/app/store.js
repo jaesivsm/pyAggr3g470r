@@ -1,5 +1,5 @@
 import { configureStore, Action } from "@reduxjs/toolkit";
-import thunk, { ThunkAction }from "redux-thunk";
+import { ThunkAction } from "redux-thunk";
 import authReducer from "../authSlice";
 import noAuthReducer from "../features/noauth/noAuthSlice";
 import feedsReducer from "../features/feedlist/slice";
@@ -14,7 +14,6 @@ export default configureStore({
     clusters: clustersReducer,
     edit: editReducer,
   },
-  middleware: [thunk],
 });
 
 export type AppThunk = ThunkAction<void, RootState, unknown, Action<string>>;

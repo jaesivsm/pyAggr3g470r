@@ -2,7 +2,7 @@ import { apiUrl } from "../const";
 import { doRetryOnTokenExpiration } from "../authSlice";
 import doFetchFeeds from "./doFetchFeeds";
 
-export default (objType): AppThunk => async (dispatch, getState) => {
+const doEditObj = (objType): AppThunk => async (dispatch, getState) => {
   const editState = getState().edit;
   const data = {};
   editState.editedKeys.forEach((key) => {
@@ -15,3 +15,5 @@ export default (objType): AppThunk => async (dispatch, getState) => {
   }, dispatch, getState);
   dispatch(doFetchFeeds());
 };
+
+export default doEditObj;

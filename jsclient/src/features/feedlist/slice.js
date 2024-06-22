@@ -23,41 +23,42 @@ function mergeCategoriesWithUnreads(feedListRows, unreads,
   }).sort((row1, row2) => (row1.index - row2.index));
 }
 
-const defaultFilter = (row) => ( // will display row if
-  !row.folded  // row is not folded
-  || row.type === "categ" // row is a category (can't be folded)
-  || row.type === "all-categ" // row is the "all categ" category (idem)
-  // row is a feed without category (idem)
-  || (row.type === "feed" && row["category_id"] === null)
-);
+export const filterFeedRows = (rows, searchTerm) => {
+    const defaultFilter = (row) => ( // will display row if
+        !row.folded  // row is not folded
+        || row.type === "categ" // row is a category (can't be folded)
+        || row.type === "all-categ" // row is the "all categ" category (idem)
+        // row is a feed without category (idem)
+        || (row.type === "feed" && row["category_id"] === null)
+    );
+    const searchTermFilter = (row) => (
+        row.type !== "categ" && row.type !== "all-categ"
+        && row.str.toLowerCase().includes(searchTerm)
+    );
+    if (searchTerm) {
+        return rows.filter(searchTermFilter);
+    } else {
+        return rows.filter(defaultFilter);
+    }
+};
+
 const feedSlice = createSlice({
   name: "feeds",
   initialState: { loadingFeeds: false,
                   loadingUnreadCounts: false,
                   unreadToFetch: true,
                   feedListRows: [],
+                  searchTerm: null,
                   unreads: {},
                   isParentFolded: storageGet("left-menu-folded", "session") === "true",
                   isOpen: triboolMapping[storageGet("left-menu-open", "session")],
-                  feedListFilter: defaultFilter,
                   icons: {},
                   categoryAsFeed: {},
   },
   reducers: {
     requestedFeeds: (state, action) => ({ ...state, loadingFeeds: true }),
     requestedUnreadCounts: (state, action) => ({ ...state, loadingUnreadCounts: true }),
-    setSearchFilter: (state, action) => {
-      if (!action.payload) {
-        return { ...state, feedListFilter: defaultFilter, };
-      }
-      const feedSearchStr = action.payload.toLowerCase();
-      return { ...state,
-               feedListFilter: (row) => (
-                 row.type !== "categ" && row.type !== "all-categ"
-                 && row.str.toLowerCase().includes(feedSearchStr)
-               ),
-      };
-    },
+    setSearchFilter: (state, action) => ({ ...state, searchTerm: action.payload }),
     toggleAllFolding: (state, action) => {
       const newFolding = !state.isParentFolded;
       storageSet("left-menu-folded", newFolding, "session");
@@ -143,10 +144,15 @@ const feedSlice = createSlice({
   },
 });
 
-export const { requestedFeeds, loadedFeeds,
-               requestedUnreadCounts, loadedUnreadCounts,
-               toggleMenu, toggleAllFolding, toggleFolding,
-               setSearchFilter,
-               changeReadCount,
+export const {
+    changeReadCount,
+    loadedFeeds,
+    loadedUnreadCounts,
+    requestedFeeds,
+    requestedUnreadCounts,
+    setSearchFilter,
+    toggleAllFolding,
+    toggleFolding,
+    toggleMenu,
 } = feedSlice.actions;
 export default feedSlice.reducer;

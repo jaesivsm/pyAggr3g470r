@@ -18,13 +18,16 @@ QU_CONTAINER_NAME = rabbitmq
 install:
 	pipenv sync --dev
 
+jslint:
+	eslint jsclient/src/
+
 pep8:
 	$(RUN) pycodestyle --ignore=E126,E127,E128,W503 jarr/ --exclude=jarr/migrations
 
 mypy:
 	$(RUN) mypy jarr --ignore-missing-imports --exclude=jarr/crawler/lib/__init__.py
 
-lint: pep8 mypy
+lint: jslint pep8 mypy
 
 test: export JARR_CONFIG = example_conf/jarr.test.json
 test:
@@ -74,7 +77,7 @@ db-bootstrap-tables:
 	$(COMPOSE) exec $(DB_CONTAINER_NAME) psql -h 0.0.0.0 -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE $(DB_NAME) to $(DB_NAME);"
 
 db-import-dump:
-	docker cp $(DUMP) jarr_$(DB_CONTAINER_NAME)_1:/tmp/dump.pgsql
+	docker cp $(DUMP) $(shell docker ps -q -f name=$(DB_CONTAINER_NAME)):/tmp/dump.pgsql
 	$(COMPOSE) exec $(DB_CONTAINER_NAME) su postgres -c "pg_restore -d $(DB_NAME) /tmp/dump.pgsql"
 	$(COMPOSE) exec $(DB_CONTAINER_NAME) rm /tmp/dump.pgsql
 

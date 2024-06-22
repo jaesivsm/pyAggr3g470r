@@ -3,7 +3,7 @@ import { apiUrl } from "../const";
 import { doRetryOnTokenExpiration } from "../authSlice";
 import { loadedUnreadCounts } from "../features/feedlist/slice";
 
-export default (onlySingles): AppThunk => async (dispatch, getState) => {
+const doMarkAllAsRead = (onlySingles): AppThunk => async (dispatch, getState) => {
   const params = { ...getState().clusters.filters };
   if(params.hasOwnProperty("from_date")) {
     delete params["from_date"];
@@ -18,3 +18,5 @@ export default (onlySingles): AppThunk => async (dispatch, getState) => {
   }, dispatch, getState);
   dispatch(loadedUnreadCounts({ unreads: result.data }));
 };
+
+export default doMarkAllAsRead;

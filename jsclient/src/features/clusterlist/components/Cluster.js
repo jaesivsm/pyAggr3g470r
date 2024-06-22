@@ -5,17 +5,17 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { createSelector } from "reselect";
 // material ui components
-import Link from "@material-ui/core/Link";
-import Checkbox from "@material-ui/core/Checkbox";
-import Typography from "@material-ui/core/Typography";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Link from "@mui/material/Link";
+import Checkbox from "@mui/material/Checkbox";
+import Typography from "@mui/material/Typography";
+import Accordion from "@mui/material/Accordion";
+import CircularProgress from "@mui/material/CircularProgress";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
 // material ui icons
-import LikedIcon from "@material-ui/icons/Star";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import LikedIconBorder from "@material-ui/icons/StarBorder";
+import LikedIcon from "@mui/icons-material/Star";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LikedIconBorder from "@mui/icons-material/StarBorder";
 // jarr
 import { removeClusterSelection, showCluster } from "../slice";
 import doEditCluster from "../../../hooks/doEditCluster";
@@ -118,15 +118,15 @@ const Cluster = ({ index, cluster, loadedCluster,
       content = <div className={classes.loadingWrap}><CircularProgress /></div>;
     }
     content = (
-      <ExpansionPanelDetails className={classes.content}
+      <AccordionDetails className={classes.content}
                              key={`cl-${cluster.id}`}>
         {content}
-      </ExpansionPanelDetails>
+      </AccordionDetails>
     );
   }
 
   return (
-      <ExpansionPanel
+      <Accordion
         expanded={expanded}
         elevation={expanded ? 10: 2}
         TransitionProps={{ unmountOnExit: true }}
@@ -138,7 +138,7 @@ const Cluster = ({ index, cluster, loadedCluster,
         onChange={(e) => handleClickOnPanel(e, cluster,
                                             unreadOnClose, expanded)}
       >
-        <ExpansionPanelSummary
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
@@ -183,9 +183,9 @@ const Cluster = ({ index, cluster, loadedCluster,
              {cluster["main_title"]}
             </Typography>
           </div>
-        </ExpansionPanelSummary>
+        </AccordionSummary>
         {content}
-      </ExpansionPanel>
+      </Accordion>
     );
 };
 

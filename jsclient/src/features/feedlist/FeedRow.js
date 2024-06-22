@@ -2,21 +2,21 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 // material ui component
-import { useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import ListItem from "@material-ui/core/ListItem";
-import Badge from "@material-ui/core/Badge";
-import ListItemText from "@material-ui/core/ListItemText";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import ListItem from "@mui/material/ListItem";
+import Badge from "@mui/material/Badge";
+import ListItemText from "@mui/material/ListItemText";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 // jarr
 import doListClusters from "../../hooks/doListClusters";
-import { toggleMenu, toggleFolding } from "./slice";
+import { toggleMenu, toggleFolding, filterFeedRows } from "./slice";
 import feedListStyle from "./feedListStyle";
 import FeedIcon from "../../components/FeedIcon";
 
 function mapStateToProps(state) {
-  return { feedListRows: state.feeds.feedListRows.filter(state.feeds.feedListFilter),
+  return { feedListRows: filterFeedRows(state.feeds.feedListRows, state.feeds.searchTerm),
            isFoldedFromParent: state.feeds.isParentFolded,
            selectedCategoryId: state.clusters.filters["category_id"],
            selectedFeedId: state.clusters.filters["feed_id"],

@@ -1,4 +1,4 @@
-FROM node:14.20.1 as build-deps
+FROM node:20-alpine as build-deps
 ARG PUBLIC_URL=
 ARG REACT_APP_API_URL=0.0.0.0:8000
 WORKDIR /jarr

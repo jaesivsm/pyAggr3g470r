@@ -12,9 +12,9 @@ const authSlice = createSlice({
   },
   reducers: {
     tokenAcquired: (state, action) => {
-      const accessToken = action.payload.data["access_token"];
-      const accessTokenExpiresAt = new Date(action.payload.data["access_token_expires_at"]).getTime();
-      const refreshToken = action.payload.data["refresh_token"];
+      const accessToken = action.payload["access_token"];
+      const accessTokenExpiresAt = new Date(action.payload["access_token_expires_at"]).getTime();
+      const refreshToken = action.payload["refresh_token"];
       if (refreshToken) {
         storageSet("refreshToken", refreshToken, "local");
         return { ...state, accessToken, refreshToken, accessTokenExpiresAt };
@@ -45,7 +45,7 @@ export const doRetryOnTokenExpiration = async (payload, dispatch, getState) => {
         url: `${apiUrl}/auth/refresh`,
         headers: { "Authorization": state.auth.refreshToken }
       });
-      dispatch(tokenAcquired(result));
+      dispatch(tokenAcquired(result.data));
       payload.headers = { "Authorization": result.data["access_token"] };
     } catch (err) { // failed to refresh it, logging out
       dispatch(purgeCredentials());

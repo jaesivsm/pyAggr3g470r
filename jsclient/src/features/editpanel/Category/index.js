@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 // material components
-import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
 // jarr
 import ClusterSettings from "../common/ClusterSettings";
 import DeleteButton from "../common/DeleteButton";

@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 // material component
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Button from "@material-ui/core/Button";
-import Switch from "@material-ui/core/Switch";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Button from "@mui/material/Button";
+import Switch from "@mui/material/Switch";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
 // jarr
 import StateTextInput from "./common/StateTextInput";
 import ClusterSettings from "./common/ClusterSettings";

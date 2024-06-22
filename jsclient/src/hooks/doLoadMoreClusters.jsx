@@ -2,7 +2,7 @@ import { retrievedClustersList, requestedMoreCLusters } from "../features/cluste
 import { doRetryOnTokenExpiration } from "../authSlice";
 import { apiUrl } from "../const";
 
-export default (): AppThunk => async (dispatch, getState) => {
+const doLoadMoreClusters = (): AppThunk => async (dispatch, getState) => {
   dispatch(requestedMoreCLusters());
   const requestedFilter = getState().clusters.requestedFilter;
   const result = await doRetryOnTokenExpiration({
@@ -12,3 +12,5 @@ export default (): AppThunk => async (dispatch, getState) => {
   dispatch(retrievedClustersList({ requestedFilter, clusters: result.data,
                                    strat: "append" }));
 };
+
+export default doLoadMoreClusters;

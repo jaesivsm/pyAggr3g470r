@@ -2,7 +2,7 @@ import { requestedUnreadCounts, loadedUnreadCounts } from "../features/feedlist/
 import { doRetryOnTokenExpiration } from "../authSlice";
 import { apiUrl } from "../const";
 
-export default (): AppThunk => async (dispatch, getState) => {
+const doFetchUnreadCount = (): AppThunk => async (dispatch, getState) => {
   dispatch(requestedUnreadCounts());
   const result = await doRetryOnTokenExpiration({
     method: "get",
@@ -10,3 +10,5 @@ export default (): AppThunk => async (dispatch, getState) => {
   }, dispatch, getState);
   dispatch(loadedUnreadCounts({ unreads: result.data }));
 };
+
+export default doFetchUnreadCount;

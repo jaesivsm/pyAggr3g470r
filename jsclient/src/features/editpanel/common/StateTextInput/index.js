@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { createSelector } from "reselect";
 import { connect, useDispatch } from "react-redux";
 // material
-import TextField from "@material-ui/core/TextField";
+import TextField from "@mui/material/TextField";
 // jarr
 import style from "./style";
 import { editLoadedObj } from "../../slice";
